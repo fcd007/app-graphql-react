@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { gql } from "apollo-boost";
+import { useMutation } from "@apollo/react-hooks";
+
+//useQuery:realiza busca no banco
+//useMutation: realiza modificacoes
+const CREATE_PERSON = gql`
+  mutation($person: people_input) {
+    createPerson(person: $person) {
+      id
+      name
+    }
+  }
+`;
 
 function App() {
+  // const response = useQuery(HELLO);
+  // eslint-disable-next-line
+  const [person, setPerson] = useState({ name: "Felipe Moura" });
+
+  const [createPerson] = useMutation(CREATE_PERSON);
+
+  const onChange = () => {};
+
+  const handleClick = async () => {
+    const result = await createPerson({ variables: { person } });
+    console.log("clicou");
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input
+        type="text"
+        name="name"
+        id="name"
+        onChange={onChange}
+        placeholder="Enter name"
+      />
+      <button type="button" onClick={handleClick}>
+        Clique
+      </button>
     </div>
   );
 }
-
 export default App;
